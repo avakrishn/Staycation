@@ -28,7 +28,7 @@
 
 
 var lat;
-var long;
+var lon;
 
 
 function getLocation() {
@@ -42,7 +42,23 @@ function getLocation() {
 
 function showPosition(position) {
    lat = position.coords.latitude;
-   long = position.coords.longitude;
-   console.log(lat , long);
+   lon = position.coords.longitude;
+   console.log(lat , lon);
+   restaurant();
 }
 
+function restaurant() {
+    $.ajax({  
+        url: "https://developers.zomato.com/api/v2.1/search",
+        dataType: 'json',
+        data: { 
+        lat: lat, 
+        lon: lon
+        },
+        async: true,
+        beforeSend: function(xhr){xhr.setRequestHeader('user-key', 
+        'faafc11160a617b55a560feef06b483c');},  // This inserts the api key into the HTTP header
+        success: function(response) { 
+            console.log(response) 
+        } });
+}

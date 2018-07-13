@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
     <script src="assets/javascript/app.js"></script>
 </head>
 <body>
@@ -24,10 +25,11 @@
 
         <!-- <button type="button" class="btn btn-info" id="search-top-right">Search</button> -->
         <form id="userInput" class="w3-panel w3-card-4">
-            <label>Name: <input type="text"></label> <button type="button" class="btn btn-info" id="submit" onclick="getLocation()">Enable My location</button>
+            <label>Name: <input type="text" id="name"></label> <button type="button" class="btn btn-info" id="search">Search</button>
+            <br>
+            <label class="contain"><input type="checkbox" id="checkbox"> <span class="checkmark"></span> Enable Current Location</label>
             <!-- <button type="button" class="btn btn-info w3-panel w3-card-4" id="prepare">Find Places Near Me</button> -->
         </form>
-         
 
         <p id="logo">LOGO placeholder</p>
     </div>

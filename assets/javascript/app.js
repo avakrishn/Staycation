@@ -1,32 +1,3 @@
-// $(document).ready(function(){
-//     // Get the modal
-//     var modal = $('#myModal');
-
-//     // Get the button that opens the modal
-//     var btn = $("#prepare");
-
-//     // Get the <span> element that closes the modal
-//     var close = $('.close');
-
-//     btn.on('click', function(){
-//         modal.css('display', 'block');
-//     });
-
-//     close.on('click', function(){
-//         modal.css('display', 'none');  
-//     })
-
-// });
-
-// $(window).on('click', function(event){
-//     var modal = $('#myModal');
-//     if (event.target == modal) {
-//         modal.css('display', 'none'); 
-//     }
-
-// })
-
-
  // Initialize Firebase
  var config = {
     apiKey: "AIzaSyAqCpGYf4cTEVY92frXrlHvt4sCN4RrsVw",

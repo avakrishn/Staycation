@@ -52,7 +52,9 @@ function showPosition(position) {
 //    setTimeout(function(){
         weather(lat, lon);
         restaurant(lat, lon);
-        getFoursquare(lat, lon); 
+        // getFoursquare(lat, lon); 
+        yelpLocations(lat, lon);
+        yelpEvents(lat,lon);
         display();
        
     // }, 6000);
@@ -119,7 +121,7 @@ $.ajax({
     // Create CODE HERE to Log the queryURL
     console.log(response)
     var iconURL = response.weather[0].icon;
-    var weatherIcon = $('<img>').attr('src',' http://openweathermap.org/img/w/'+iconURL+'.png');
+    var weatherIcon = $('<img>').attr('src','http://openweathermap.org/img/w/'+iconURL+'.png');
     var temp = $('<span>').html(response.main.temp);
     var city = $('<span>').html(response.name);
     var description = $('<p>').html(response.weather[0].description);
@@ -142,6 +144,54 @@ function getFoursquare(x,y){
       }
     });
   };
+
+  function yelpLocations(x,y){
+    // var rapid = new RapidAPI("default-application_5b4a33cae4b004833ec270ad", "3ad9125a-b897-4679-9417-020f62576786");
+    // var RapidAPI = new require('rapidapi-connect');
+    var rapid = new RapidAPI('default-application_5b4a33cae4b004833ec270ad', '3ad9125a-b897-4679-9417-020f62576786');
+
+    rapid.call('YelpAPI', 'getBusinesses', { 
+        'term': 'attractions',
+        'openNow': 'true',
+        'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
+        'latitude': x,
+        'longitude': y,
+        'attributes': ['', '']
+
+
+    }).on('success', function(res){
+        console.log(res);
+
+        /*YOUR CODE GOES HERE*/ 
+    }).on('error', function(res){
+        /*YOUR CODE GOES HERE*/ 
+        console.log('Error');
+    });
+
+  }
+
+  function yelpEvents(x,y){
+    var rapid = new RapidAPI("default-application_5b4a341ce4b0fd573002f094", "deaaa550-92ad-4d67-8742-180e2230c626");
+
+    rapid.call('YelpAPI', 'searchEvent', { 
+        'coordinates': '37.7916153, -122.3935686',
+        'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
+        'limit': '20',
+        // 'sortOn': 'time_start',
+        'radius': '10000',
+        'startDate': '2018-07-14',
+        'endDate': '2018-07-14',
+        // 'categories': ['', '']
+
+    }).on('success', function (res) {
+        console.log(res);
+        /*YOUR CODE GOES HERE*/ 
+    }).on('error', function (res) {
+        console.log('Error');
+        /*YOUR CODE GOES HERE*/ 
+});
+  }
+  
 
 //   var url = "https://api.foursquare.com/v2/venues/explore?client_id=C3RL0TDP2E1I4JKKVUIGQGK41LS3L3QIUZGKI1DQWI0RZTOC&client_secret=B4OJE5X30WB2PC41CIIYOMJORHM1TN4M31NAOFUQZEJSAYL4&ll="+x+","+y+"&section=outdoors"+"&v=20180713";
 

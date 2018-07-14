@@ -123,3 +123,15 @@ i{
     text-decoration: none;
     cursor: pointer;
 }
+
+#map {
+    height: 40%;
+    width: 40%;
+    margin: 0 auto;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }

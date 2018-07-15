@@ -62,8 +62,9 @@ function showPosition(position) {
 
 function display(){
     $('#hide').hide();
+    $('#weather, #restaurants, #events').empty();
     $('#show').show();
-
+    
 }
 
 
@@ -103,9 +104,29 @@ function restaurant(x,y) {
         beforeSend: function(xhr){xhr.setRequestHeader('user-key', 
         'faafc11160a617b55a560feef06b483c');},  // This inserts the api key into the HTTP header
         success: function(response) { 
-            console.log(response) 
+            console.log(response)
+            for(var i=0; i < 10; i++){
+                var rCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 rCard align-middle');
+                var rName = $('<h4>').html(response.restaurants[i].restaurant.name);
+                rCard.attr('data-url', response.restaurants[i].restaurant.url)
+                if(response.restaurants[i].restaurant.featured_image !== ""){
+                    var rImage = $('<img>').attr('src',response.restaurants[i].restaurant.featured_image).attr('href', response.restaurants[i].restaurant.url).attr('target','_blank').css('height', '100px');
+                }
+                else{
+                    var rImage = $('<img>').attr('src','assets/images/image-filler.jpg').attr('href', response.restaurants[i].restaurant.url).attr('target','_blank').css('height', '100px');
+                }
+                
+                var rCuisine = $('<p>').html(response.restaurants[i].restaurant.cuisines);
+                var rLocation = $('<p>').html(response.restaurants[i].restaurant.location.address);
+                var rMenu = $('<a>').attr('href', response.restaurants[i].restaurant.menu_url).html(response.restaurants[i].restaurant.name + " Menu").attr('target','_blank');
+                rCard.append(rName, rImage, rCuisine, rLocation, rMenu);
+                $('#restaurants').append(rCard);
+            } 
+            
         } });
+
 }
+
 
 var APIKey = "3cde5a9db34a7bc318d935fbac26a604";
 // var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&"+"lon="+lon+"&APPID="+APIKey;
@@ -121,14 +142,18 @@ $.ajax({
     // Create CODE HERE to Log the queryURL
     console.log(response)
     var iconURL = response.weather[0].icon;
-    var weatherIcon = $('<img>').attr('src','http://openweathermap.org/img/w/'+iconURL+'.png');
-    var temp = $('<span>').html(response.main.temp);
-    var city = $('<span>').html(response.name);
-    var description = $('<p>').html(response.weather[0].description);
-    $('#weather').append(weatherIcon, temp, city, description);
+    var weatherIcon = $('<img>').attr('src','http://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2').css('float', 'right');;
+    var Ktemp = response.main.temp;
+    var Ftemp = parseInt((((Ktemp-273.15)*1.8)+32));
+    var temp = $('<span>').html(Ftemp + "&#8457;  ").css('float', 'right').addClass('mr-2');
+    var description = $('<span>').html(response.weather[0].description).css('float', 'right');;
+    var city = $('<div>').html("City: "+ response.name).css('display', 'inline-block');
+    var weatherDiv = $('<div>').append(description, temp, weatherIcon);
+    $('#weather').append(weatherDiv, city );
 
   });
 }
+
 
 function getFoursquare(x,y){
     var url = "https://api.foursquare.com/v2/venues/categories?client_id=C3RL0TDP2E1I4JKKVUIGQGK41LS3L3QIUZGKI1DQWI0RZTOC&client_secret=B4OJE5X30WB2PC41CIIYOMJORHM1TN4M31NAOFUQZEJSAYL4&ll="+x+","+y+"&v=20180713";

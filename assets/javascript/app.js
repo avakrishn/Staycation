@@ -128,6 +128,7 @@ function restaurant(x,y) {
                     ondragstart: "drag(event)",
                     ondrop:"return false",
                     ondragover:"return false",
+                    "data-append": "green",
                     id: "drag"+i
                 }).css({
                     width: 'fit-content',
@@ -194,31 +195,40 @@ function drag(ev) {
 //     ev.target.appendChild(document.getElementById(data));
 // }
 
-function dropR(ev, el) {
+function dropR(ev, el){
+    
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    var child = document.getElementById(data);
-    child.childNodes[2].style.display = "show";
-    child.childNodes[5].style.display = "show";
-    child.style.width = "fit-content";
-    child.style.height = "330px";
-    console.log(child);
+    
     // console.log(child.childNodes[5]);
-    el.appendChild(child);
+    if(ev.target.getAttribute('data-append') == document.getElementById(data).getAttribute('data-append')){
+        var child = document.getElementById(data);
+        child.childNodes[2].style.display = "inline-flex";
+        child.childNodes[5].style.display = "block";
+        child.style.width = "fit-content";
+        child.style.height = "330px";
+        console.log(child);
+        el.appendChild(child);
+    }
+   
   }
 
 function dropF(ev, el) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
-    var child = document.getElementById(data);
-    child.childNodes[2].style.display = "none";
-    child.childNodes[5].style.display = "none";
 
-    child.style.width = "100%";
-    child.style.height = "fit-content";
-    // console.log(child.childNodes[2]);
-    // console.log(child.childNodes[5]);
-    el.appendChild(child);
+    if(ev.target.getAttribute('data-append') == document.getElementById(data).getAttribute('data-append')){
+        var child = document.getElementById(data);
+        child.childNodes[2].style.display = "none";
+        child.childNodes[5].style.display = "none";
+
+        child.style.width = "100%";
+        child.style.height = "fit-content";
+        // console.log(child.childNodes[2]);
+        // console.log(child.childNodes[5]);
+        el.appendChild(child);
+    }
+
   }
 
 var APIKey = "3cde5a9db34a7bc318d935fbac26a604";

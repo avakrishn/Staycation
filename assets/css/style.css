@@ -91,7 +91,7 @@ i{
     width: 100%;
     height: 370px;
     display: inline-flex;
-    /* flex-direction row will diplay the flexible items vertically as one row  */
+    /* flex-direction row will diplay the flexible items horizontally as one row  */
     flex-direction: row;
     /* any overflow vertically will be hidden */
     overflow-y: hidden;
@@ -105,11 +105,11 @@ i{
 
 #favR, #favE, #favA{
     display: inline-flex;
-    /* flex-direction row will diplay the flexible items vertically as one row  */
+    /* flex-direction column will diplay the flexible items vertically as one row  */
     flex-direction: column;
-    /* any overflow vertically will be hidden */
+    /* any overflow vertically will be be visible when user scrolls vertically  */
     overflow-y: scroll;
-    /* any overflow horizonatally will be visible when user scrolls horizontally */
+    /* any overflow horizonatally will will be hidden */
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
 }

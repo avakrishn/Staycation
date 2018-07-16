@@ -106,12 +106,17 @@ i{
 #favR, #favE, #favA{
     display: inline-flex;
     /* flex-direction row will diplay the flexible items vertically as one row  */
-    flex-direction: row;
+    flex-direction: column;
     /* any overflow vertically will be hidden */
-    overflow-y: hidden;
+    overflow-y: scroll;
     /* any overflow horizonatally will be visible when user scrolls horizontally */
-    overflow-x: scroll;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+}
+
+.icon:hover{
+    cursor: -webkit-grabbing; 
+    cursor: grabbing;
 }
 
 /* The Modal (background)

@@ -12,6 +12,7 @@
 //   var database = firebase.database();
 
 var name;
+
 // var lat;
 // var lon;
 
@@ -50,13 +51,26 @@ function showPosition(position) {
    lon = position.coords.longitude;
    console.log(lat , lon);
 
+    var date = new Date().toISOString().split('T')[0];
     
+    
+
+    $.ajax({ url:'http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true',
+         success: function(data){
+             console.log(data);
+             var fullAddress = data.results[0].formatted_address;
+             var cityState = data.results[2].formatted_address;
+             var city = data.results[0].address_components[3].long_name;
+            yelpEvents(cityState, date);
+         }
+    });
+    // console.log(city);
 //    setTimeout(function(){
         weather(lat, lon);
         restaurant(lat, lon);
         // getFoursquare(lat, lon); 
         yelpLocations(lat, lon);
-        yelpEvents(lat,lon);
+        // yelpEvents(city, date);
         display();
        
     // }, 6000);
@@ -68,6 +82,7 @@ function display(){
     $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather').removeClass('hide');
     
 }
+
 
 
 $(document).on('click', '#search', function(){
@@ -119,21 +134,23 @@ function restaurant(x,y) {
                     height:'330px',
                     position: 'relative'
                 });
-                var icon = $('<p>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2"></i>').css('color', 'grey');
+                var icon = $('<p>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 icon"></i>').css('color', 'grey');
                 var rName = $('<h5>').html(response.restaurants[i].restaurant.name);
                 if(response.restaurants[i].restaurant.featured_image !== ""){
                     var rImage = $('<img>').attr({
                         src: response.restaurants[i].restaurant.featured_image,
                         href:  response.restaurants[i].restaurant.url,
                         target: '_blank',
-                        height: '100px'
+                        height: '100px',
+                        id: 'image'+i
                     });
                 }
                 else{
                     var rImage = $('<img>').css('height', '100px').attr({
                         src: 'assets/images/image-filler.jpg',
                         href: response.restaurants[i].restaurant.url,
-                        target:'_blank'
+                        target:'_blank',
+                        id: 'image' +i
                     });
                     
                 }
@@ -164,6 +181,7 @@ function restaurant(x,y) {
 
 function allowDrop(ev) {
     ev.preventDefault();
+
 }
 
 function drag(ev) {
@@ -176,13 +194,32 @@ function drag(ev) {
 //     ev.target.appendChild(document.getElementById(data));
 // }
 
-function drop(ev, el) {
+function dropR(ev, el) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
     var child = document.getElementById(data);
+    child.childNodes[2].style.display = "show";
+    child.childNodes[5].style.display = "show";
+    child.style.width = "fit-content";
+    child.style.height = "330px";
+    console.log(child);
+    // console.log(child.childNodes[5]);
     el.appendChild(child);
   }
 
+function dropF(ev, el) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var child = document.getElementById(data);
+    child.childNodes[2].style.display = "none";
+    child.childNodes[5].style.display = "none";
+
+    child.style.width = "100%";
+    child.style.height = "fit-content";
+    // console.log(child.childNodes[2]);
+    // console.log(child.childNodes[5]);
+    el.appendChild(child);
+  }
 
 var APIKey = "3cde5a9db34a7bc318d935fbac26a604";
 // var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&"+"lon="+lon+"&APPID="+APIKey;
@@ -203,9 +240,9 @@ $.ajax({
     var Ftemp = parseInt((((Ktemp-273.15)*1.8)+32));
     var temp = $('<span>').html(Ftemp + "&#8457;  ").css('float', 'right').addClass('mr-2');
     var description = $('<span>').html(response.weather[0].description).css('float', 'right');;
-    var city = $('<div>').html("City: "+ response.name).css('display', 'inline-block');
+    cityDisplay = $('<div>').html("City: "+ response.name).css('display', 'inline-block');
     var weatherDiv = $('<div>').append(description, temp, weatherIcon);
-    $('#weather').append(weatherDiv, city );
+    $('#weather').append(weatherDiv, cityDisplay );
 
   });
 }
@@ -255,13 +292,16 @@ function getFoursquare(x,y){
     var rapid = new RapidAPI("default-application_5b4a341ce4b0fd573002f094", "deaaa550-92ad-4d67-8742-180e2230c626");
 
     rapid.call('YelpAPI', 'searchEvent', { 
-        'coordinates': '37.7916153, -122.3935686',
+        // 'coordinates': x,y,
+        // 'latitude': x,
+        // 'longitude': y,
+        'location': x,
         'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
         'limit': '20',
         // 'sortOn': 'time_start',
         'radius': '10000',
-        'startDate': '2018-07-14',
-        'endDate': '2018-07-14',
+        'startDate': y,
+        'endDate': y,
         // 'categories': ['', '']
 
     }).on('success', function (res) {

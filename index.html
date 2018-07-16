@@ -99,8 +99,16 @@
 
 <div id="show" class="container-fluid">
     <div id="weather" class="container-fluid"></div>
-    <div id="restaurants" class="container-fluid clearfix text-center">asdasda</div>
-    <div id="events">asdasd</div>
+    <div id="favorites" class="container-fluid justify-content-center">
+        <div id="favR" class="w-50" ondrop="drop(event, this)" ondragover="allowDrop(event)" data-draggable ="target" style="width: 100%; border: black 3px solid;"></div>
+        <div id="favE" class="w-50" ondrop="drop(event, this)" ondragover="allowDrop(event)" data-draggable ="target" style="width: 100%; border: black 3px solid;"></div>
+        <div id="favA" class="w-50" ondrop="drop(event, this)" ondragover="allowDrop(event)" data-draggable ="target" style="width: 100%; border: black 3px solid;"></div>
+    </div>
+    
+    <div id="restaurants" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="drop(event, this)" ondragover="allowDrop(event)"></div>
+    <div id="events"></div>
+    <div id="attractions"></div>
+
 
 
 </div>

@@ -16,7 +16,7 @@ var name;
 // var lon;
 
 $(document).ready(function(){
-
+    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather').addClass('hide');
     $('#search').on('click', function(){
         event.preventDefault();
         if( $('#checkbox').is(':checked')){
@@ -49,6 +49,8 @@ function showPosition(position) {
    lat = position.coords.latitude;
    lon = position.coords.longitude;
    console.log(lat , lon);
+
+    
 //    setTimeout(function(){
         weather(lat, lon);
         restaurant(lat, lon);
@@ -62,12 +64,10 @@ function showPosition(position) {
 
 function display(){
     $('#hide').hide();
-    $('#weather, #restaurants, #events').empty();
-    $('#show').show();
+    $('#weather, #restaurants, #events, #attractions').empty();
+    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather').removeClass('hide');
     
 }
-
-
 
 
 $(document).on('click', '#search', function(){
@@ -106,26 +106,82 @@ function restaurant(x,y) {
         success: function(response) { 
             console.log(response)
             for(var i=0; i < 10; i++){
-                var rCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 rCard align-middle');
-                var rName = $('<h4>').html(response.restaurants[i].restaurant.name);
-                rCard.attr('data-url', response.restaurants[i].restaurant.url)
+                // var dragIcon = <i class="fas fa-ellipsis-v"></i>
+                var rCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 rCard align-middle myTrigger').attr({
+                    href: response.restaurants[i].restaurant.url,
+                    draggable: "true",
+                    ondragstart: "drag(event)",
+                    ondrop:"return false",
+                    ondragover:"return false",
+                    id: "drag"+i
+                }).css({
+                    width: 'fit-content',
+                    height:'330px',
+                    position: 'relative'
+                });
+                var icon = $('<p>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2"></i>').css('color', 'grey');
+                var rName = $('<h5>').html(response.restaurants[i].restaurant.name);
                 if(response.restaurants[i].restaurant.featured_image !== ""){
-                    var rImage = $('<img>').attr('src',response.restaurants[i].restaurant.featured_image).attr('href', response.restaurants[i].restaurant.url).attr('target','_blank').css('height', '100px');
+                    var rImage = $('<img>').attr({
+                        src: response.restaurants[i].restaurant.featured_image,
+                        href:  response.restaurants[i].restaurant.url,
+                        target: '_blank',
+                        height: '100px'
+                    });
                 }
                 else{
-                    var rImage = $('<img>').attr('src','assets/images/image-filler.jpg').attr('href', response.restaurants[i].restaurant.url).attr('target','_blank').css('height', '100px');
+                    var rImage = $('<img>').css('height', '100px').attr({
+                        src: 'assets/images/image-filler.jpg',
+                        href: response.restaurants[i].restaurant.url,
+                        target:'_blank'
+                    });
+                    
                 }
                 
-                var rCuisine = $('<p>').html(response.restaurants[i].restaurant.cuisines);
-                var rLocation = $('<p>').html(response.restaurants[i].restaurant.location.address);
-                var rMenu = $('<a>').attr('href', response.restaurants[i].restaurant.menu_url).html(response.restaurants[i].restaurant.name + " Menu").attr('target','_blank');
-                rCard.append(rName, rImage, rCuisine, rLocation, rMenu);
+                var rCuisine = $('<p>').html(response.restaurants[i].restaurant.cuisines).css("margin-bottom", '0.5rem');
+                var location = response.restaurants[i].restaurant.location.address;
+                var rLocation = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
+                var rMenu = $('<a>').html(response.restaurants[i].restaurant.name + " Menu").attr({
+                    href: response.restaurants[i].restaurant.menu_url,
+                    target: '_blank',
+                }).css({
+                    color: 'orange',
+                    position: 'absolute',
+                    bottom: '0',
+                    right: '0',
+                    left: '0',
+                    'margin-bottom': '0.5rem'
+                });
+                rCard.append(icon, rName, rImage, rCuisine, rLocation, rMenu);
                 $('#restaurants').append(rCard);
             } 
             
         } });
 
 }
+
+
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+// function drop(ev) {
+//     ev.preventDefault();
+//     var data = ev.dataTransfer.getData("text");
+//     ev.target.appendChild(document.getElementById(data));
+// }
+
+function drop(ev, el) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var child = document.getElementById(data);
+    el.appendChild(child);
+  }
 
 
 var APIKey = "3cde5a9db34a7bc318d935fbac26a604";

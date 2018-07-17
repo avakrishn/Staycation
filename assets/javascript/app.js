@@ -226,7 +226,7 @@ function dropF(ev, el) {
 
         if(document.getElementById(data).getAttribute('data-append') == 'green'){
             child.style.minHeight = '150px';
-            child.style.height = 'fit-content';
+            child.style.maxHeight = '150px';
         }else{
             child.style.height = "fit-content";
             }

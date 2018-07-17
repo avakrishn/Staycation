@@ -55,7 +55,7 @@ function showPosition(position) {
     
     
 
-    $.ajax({ url:'http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true',
+    $.ajax({ url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true',
          success: function(data){
              console.log(data);
              var fullAddress = data.results[0].formatted_address;

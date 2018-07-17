@@ -207,6 +207,8 @@ function dropR(ev, el){
         child.childNodes[2].style.display = "inline-flex";
         // child.childNodes[5].style.display = "block";
         child.style.width = "fit-content";
+        child.style.minHeight = '';
+        child.style.maxHeight = '';
         child.style.height = "330px";
         console.log(child);
         el.appendChild(child);

@@ -129,9 +129,9 @@ function restaurant(x,y) {
                     ondrop:"return false",
                     ondragover:"return false",
                     "data-append": "green",
-                    id: "drag"+i
+                    id: "dragR"+i
                 }).css({
-                    width: 'fit-content',
+                    "min-width": '250px',
                     height:'330px',
                     position: 'relative'
                 });
@@ -168,7 +168,8 @@ function restaurant(x,y) {
                     bottom: '0',
                     right: '0',
                     left: '0',
-                    'margin-bottom': '0.5rem'
+                    'margin-bottom': '0.5rem',
+                    'margin-top': '0.5rem'
                 });
                 rCard.append(icon, rName, rImage, rCuisine, rLocation, rMenu);
                 $('#restaurants').append(rCard);
@@ -204,13 +205,12 @@ function dropR(ev, el){
     if(ev.target.getAttribute('data-append') == document.getElementById(data).getAttribute('data-append')){
         var child = document.getElementById(data);
         child.childNodes[2].style.display = "inline-flex";
-        child.childNodes[5].style.display = "block";
+        // child.childNodes[5].style.display = "block";
         child.style.width = "fit-content";
         child.style.height = "330px";
         console.log(child);
         el.appendChild(child);
     }
-   
   }
 
 function dropF(ev, el) {
@@ -220,10 +220,15 @@ function dropF(ev, el) {
     if(ev.target.getAttribute('data-append') == document.getElementById(data).getAttribute('data-append')){
         var child = document.getElementById(data);
         child.childNodes[2].style.display = "none";
-        child.childNodes[5].style.display = "none";
+        // child.childNodes[5].style.display = "none";
 
         child.style.width = "100%";
-        child.style.height = "fit-content";
+
+        if(document.getElementById(data).getAttribute('data-append') == 'green'){
+            child.style.height = '150px';
+        }else{
+            child.style.height = "fit-content";
+            }
         // console.log(child.childNodes[2]);
         // console.log(child.childNodes[5]);
         el.appendChild(child);
@@ -258,20 +263,20 @@ $.ajax({
 }
 
 
-function getFoursquare(x,y){
-    var url = "https://api.foursquare.com/v2/venues/categories?client_id=C3RL0TDP2E1I4JKKVUIGQGK41LS3L3QIUZGKI1DQWI0RZTOC&client_secret=B4OJE5X30WB2PC41CIIYOMJORHM1TN4M31NAOFUQZEJSAYL4&ll="+x+","+y+"&v=20180713";
-    $.ajax({
-      url: url,
-      dataType: 'json',
-      data: { 
-        lat: x, 
-        lng: y
-        },
-      success: function(response){
-      console.log(response) 
-      }
-    });
-  };
+// function getFoursquare(x,y){
+//     var url = "https://api.foursquare.com/v2/venues/categories?client_id=C3RL0TDP2E1I4JKKVUIGQGK41LS3L3QIUZGKI1DQWI0RZTOC&client_secret=B4OJE5X30WB2PC41CIIYOMJORHM1TN4M31NAOFUQZEJSAYL4&ll="+x+","+y+"&v=20180713";
+//     $.ajax({
+//       url: url,
+//       dataType: 'json',
+//       data: { 
+//         lat: x, 
+//         lng: y
+//         },
+//       success: function(response){
+//       console.log(response) 
+//       }
+//     });
+//   };
 
   function yelpLocations(x,y){
     // var rapid = new RapidAPI("default-application_5b4a33cae4b004833ec270ad", "3ad9125a-b897-4679-9417-020f62576786");
@@ -287,11 +292,66 @@ function getFoursquare(x,y){
         'attributes': ['', '']
 
 
-    }).on('success', function(res){
-        console.log(res);
-
+    }).on('success', function(response){
+        console.log(response);
+        for(var i=0; i < 10; i++){
+            // var dragIcon = <i class="fas fa-ellipsis-v"></i>
+            var yCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 yCard align-middle myTrigger').attr({
+                // href: response.restaurants[i].restaurant.url,
+                draggable: "true",
+                ondragstart: "drag(event)",
+                ondrop:"return false",
+                ondragover:"return false",
+                "data-append": "red",
+                id: "dragY"+i
+            }).css({
+                "min-width": '250px',
+                height:'330px',
+                position: 'relative'
+            });
+            var icon = $('<span>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 icon"></i>').css('color', 'grey');
+            var yName = $('<h5>').html(response.businesses[i].name);
+                var yImage = $('<img>').attr({
+                    src: response.businesses[i].image_url,
+                    // href:  response.restaurants[i].restaurant.url,
+                    target: '_blank',
+                    height: '100px',
+                    id: 'image'+i
+                });
+            
+            var categories = $('<p>').html(response.businesses[i].categories[0].title).css("margin-bottom", '0.5rem');
+            var location = "";
+            var displayAddress = response.businesses[i].location.display_address;
+            for (var j=0; j<displayAddress.length; j++){
+                location += displayAddress[j] + " ";
+            }
+            // var location = response.businesses[i].location.display_address[0] + " " + response.businesses[i].location.display_address[1];
+            var yAddress = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
+            var option = response.businesses[i].is_closed.toString();
+            var yAppend = '';
+            if (option == 'false'){
+                yAppend = $('<p>').html('Open Now').css('color', 'green');
+            } else {
+                yAppend = $('<p>').html('Closed Now').css('color', 'red');
+            }
+            var yelpBusiness = $('<a>').html("Yelp Page").attr({
+                href: response.businesses[i].url,
+                target: '_blank',
+            }).css({
+                color: 'orange',
+                position: 'absolute',
+                bottom: '0',
+                right: '0',
+                left: '0',
+                'margin-bottom': '0.5rem'
+            });
+            yCard.append(icon, yName, yImage, categories, yAddress, yelpBusiness, yAppend);
+            $('#attractions').append(yCard);
+        } 
+        
+    }
         /*YOUR CODE GOES HERE*/ 
-    }).on('error', function(res){
+    ).on('error', function(res){
         /*YOUR CODE GOES HERE*/ 
         console.log('Error');
     });
@@ -314,8 +374,78 @@ function getFoursquare(x,y){
         'endDate': y,
         // 'categories': ['', '']
 
-    }).on('success', function (res) {
-        console.log(res);
+    }).on('success', function (response) {
+        console.log(response);
+        for(var i=0; i < 10; i++){
+            // var dragIcon = <i class="fas fa-ellipsis-v"></i>
+            var eCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 eCard align-middle myTrigger').attr({
+                // href: response.restaurants[i].restaurant.url,
+                draggable: "true",
+                ondragstart: "drag(event)",
+                ondrop:"return false",
+                ondragover:"return false",
+                "data-append": "blue",
+                id: "dragE"+i
+            }).css({
+                "min-width": '250px',
+                height:'390px',
+                position: 'relative'
+            });
+            var icon = $('<span>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 icon"></i>').css('color', 'grey');
+            var eName = $('<h5>').html(response.events[i].name);
+            var eImage = $('<img>').attr({
+                src: response.events[i].image_url,
+                // href:  response.restaurants[i].restaurant.url,
+                target: '_blank',
+                height: '100px',
+                id: 'image'+i
+            });
+            var categoryReplace = response.events[i].category;
+            categoryReplace = categoryReplace.replace(/-/g, ' ') 
+            var category = $('<p>').html(categoryReplace).css("margin-bottom", '0.5rem').css("text-transform", "capitalize");
+            // var location = response.events[i].location.display_address[0] + " " + response.events[i].location.display_address[1];
+            var location = "";
+            var displayAddress = response.events[i].location.display_address;
+            for (var j=0; j<displayAddress.length; j++){
+                location = location + " " + displayAddress[j];
+            }
+            var eAddress = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
+            var cost = $('<p>').html('$ ' + response.events[i].cost);
+                if (response.events[i].cost == null){
+                    eAppend = $('<p>').html('Free').css('color', 'green');
+                } else {
+                    eAppend = $('<p>').html('$' + response.events[i].cost).css('color', 'red');
+                }
+            var startSlice = response.events[i].time_start;
+            var start = startSlice.slice(5);
+            var endSlice = response.events[i].time_end;
+            var end = endSlice.slice(5);
+            var startStr = $('<p>').html('Time Start: ' + start);
+            var endStr = $('<p>').html('Time End: ' + end);
+            if (response.events[i].time_end == null){
+                endStr = "";
+            }
+            // var option = response.businesses[i].is_closed.toString();
+            // var eAppend = '';
+            // if (option == 'false'){
+            //     eAppend = $('<p>').html('Open Now').css('color', 'green');
+            // } else {
+            //     eAppend = $('<p>').html('Closed Now').css('color', 'red');
+            // }
+            var eEvent = $('<a>').html("Yelp Event Page").attr({
+                href: response.events[i].event_site_url,
+                target: '_blank',
+            }).css({
+                color: 'orange',
+                position: 'absolute',
+                bottom: '0',
+                right: '0',
+                left: '0',
+                'margin-bottom': '0.5rem'
+            });
+            eCard.append(icon, eName, eImage, category, eAddress, eAppend, startStr, endStr, eEvent);
+            $('#events').append(eCard);
+        } 
         /*YOUR CODE GOES HERE*/ 
     }).on('error', function (res) {
         console.log('Error');

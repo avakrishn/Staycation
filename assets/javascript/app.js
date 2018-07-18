@@ -55,22 +55,22 @@ function showPosition(position) {
     
     
 
-    $.ajax({ url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true',
-         success: function(data){
-             console.log(data);
-             var fullAddress = data.results[0].formatted_address;
-             var cityState = data.results[2].formatted_address;
-             var city = data.results[0].address_components[3].long_name;
-            yelpEvents(cityState, date);
-         }
-    });
+    // $.ajax({ url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true',
+    //      success: function(data){
+    //          console.log(data);
+    //          var fullAddress = data.results[0].formatted_address;
+    //          var cityState = data.results[2].formatted_address;
+    //          var city = data.results[0].address_components[3].long_name;
+    //         // yelpEvents(cityState, date);
+    //      }
+    // });
     // console.log(city);
 //    setTimeout(function(){
         weather(lat, lon);
         restaurant(lat, lon);
         // getFoursquare(lat, lon); 
         yelpLocations(lat, lon);
-        // yelpEvents(city, date);
+        yelpEvents(lat, lon, date);
         display();
        
     // }, 6000);
@@ -361,20 +361,22 @@ $.ajax({
 
   }
 
-  function yelpEvents(x,y){
+  function yelpEvents(x,y,z){
     var rapid = new RapidAPI("default-application_5b4a341ce4b0fd573002f094", "deaaa550-92ad-4d67-8742-180e2230c626");
+    
+    var coordinate = x + ", " + y;
 
     rapid.call('YelpAPI', 'searchEvent', { 
-        // 'coordinates': x,y,
+        'coordinates': coordinate,
         // 'latitude': x,
         // 'longitude': y,
-        'location': x,
+        // 'location': x,
         'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
         'limit': '20',
         // 'sortOn': 'time_start',
         'radius': '10000',
-        'startDate': y,
-        'endDate': y,
+        'startDate': z,
+        'endDate': z,
         // 'categories': ['', '']
 
     }).on('success', function (response) {

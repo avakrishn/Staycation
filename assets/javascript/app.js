@@ -253,7 +253,7 @@ $.ajax({
     // Create CODE HERE to Log the queryURL
     console.log(response)
     var iconURL = response.weather[0].icon;
-    var weatherIcon = $('<img>').attr('src','http://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2').css('float', 'right');;
+    var weatherIcon = $('<img>').attr('src','https://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2').css('float', 'right');;
     var Ktemp = response.main.temp;
     var Ftemp = parseInt((((Ktemp-273.15)*1.8)+32));
     var temp = $('<span>').html(Ftemp + "&#8457;  ").css('float', 'right').addClass('mr-2');
@@ -413,20 +413,27 @@ $.ajax({
                 location = location + " " + displayAddress[j];
             }
             var eAddress = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
-            var cost = $('<p>').html('$ ' + response.events[i].cost);
+            // var cost = $('<p>').html('$ ' + response.events[i].cost);
                 if (response.events[i].cost == null){
                     eAppend = $('<p>').html('Free').css('color', 'green');
                 } else {
                     eAppend = $('<p>').html('$' + response.events[i].cost).css('color', 'red');
                 }
-            var startSlice = response.events[i].time_start;
-            var start = startSlice.slice(5);
-            var endSlice = response.events[i].time_end;
-            var end = endSlice.slice(5);
-            var startStr = $('<p>').html('Time Start: ' + start);
-            var endStr = $('<p>').html('Time End: ' + end);
-            if (response.events[i].time_end == null){
-                endStr = "";
+            if(response.events[i].time_start != null){
+                var startSlice = response.events[i].time_start;
+                var start = startSlice.slice(5);
+                var startStr = $('<p>').html('Time Start: ' + start);
+            }
+            else{
+                var startStr = "";  
+            }
+            if(response.events[i].time_end != null ){
+                var endSlice = response.events[i].time_end;
+                var end = endSlice.slice(5);
+                var endStr = $('<p>').html('Time End: ' + end);
+            }
+            else{
+                var endStr = "";
             }
             // var option = response.businesses[i].is_closed.toString();
             // var eAppend = '';

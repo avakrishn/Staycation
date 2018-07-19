@@ -10,9 +10,12 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/style.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
     <script src="https://s3.amazonaws.com/rapidapi-prod-fe_static/rapidapi.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
@@ -77,17 +80,17 @@
 
     <div class="container-fluid d-flex justify-content-center">
         <div class ="row text-center">
-            <div class="card col-sm justify-content-center p-2 w3-panel w3-card-4">
+            <div class="introCard card col-sm justify-content-center p-2 w3-panel w3-card-4">
                 <div class="p-1"><i class="fas fa-sun"></i></div>
                 <h3 class="cardTitle">Weather For Your Trip</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor sapien a rutrum ullamcorper. Quisque lorem libero, iaculis rhoncus tortor id, efficitur vulputate odio. Mauris cursus ipsum in hendrerit tincidunt.</p>
             </div>
-            <div class="card col-sm justify-content-center p-2 w3-panel w3-card-4">
+            <div class="introCard card col-sm justify-content-center p-2 w3-panel w3-card-4">
                 <div class="p-1"><i class="fas fa-newspaper"></i></div>
                 <h3 class="cardTitle">What's Happening Locally</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor sapien a rutrum ullamcorper. Quisque lorem libero, iaculis rhoncus tortor id, efficitur vulputate odio. Mauris cursus ipsum in hendrerit tincidunt.</p>
             </div>
-            <div class="card col-sm justify-content-center p-2 w3-panel w3-card-4">
+            <div class="introCard card col-sm justify-content-center p-2 w3-panel w3-card-4">
                 <div class="p-1"><i class="fas fa-map-marked-alt"></i></div>
                 <h3 class="cardTitle">Top Places to Visit</h3>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer auctor sapien a rutrum ullamcorper. Quisque lorem libero, iaculis rhoncus tortor id, efficitur vulputate odio. Mauris cursus ipsum in hendrerit tincidunt.</p>
@@ -100,16 +103,62 @@
 <div id="show" class="container-fluid">
     <div id="weather" class="container-fluid"></div>
     <div id="favorites" class="container-fluid justify-content-center">
-        <div id="favR" class="w-50" ondrop="dropF(event, this)" ondragover="allowDrop(event)" data-draggable ="target" data-append="green" style="width: 100%; border: black 3px solid;"></div>
-        <div id="favA" class="w-50" ondrop="dropF(event, this)" ondragover="allowDrop(event)" data-draggable ="target" data-append="red" style="width: 100%; border: black 3px solid;"></div>
-        <div id="favE" class="w-50" ondrop="dropF(event, this)" ondragover="allowDrop(event)" data-draggable ="target" data-append="blue" style="width: 100%; border: black 3px solid;"></div>
+        <div id="favR" class="w-50" ondrop="dropF(event, this)" ondragover="allowDrop(event)" data-draggable ="target" data-append="green" style="width: 100%; border: #17a2b8 2px solid;"></div>
+        <div id="favA" class="w-50" ondrop="dropF(event, this)" ondragover="allowDrop(event)" data-draggable ="target" data-append="red" style="width: 100%; border: #17a2b8 2px solid;"></div>
+        <div id="favE" class="w-50" ondrop="dropF(event, this)" ondragover="allowDrop(event)" data-draggable ="target" data-append="blue" style="width: 100%; border: #17a2b8 2px solid;"></div>
     </div>
     
-    <div id="restaurants" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="green"></div>
+    <div id="accordion">
+
+        <div class="card">
+          <div class="card-header">
+            <a class="card-link" data-toggle="collapse" href="#collapseOne">
+              Restaurants <a data-toggle="tooltip" title="Test!" span id="info" class="fas fa-info-circle"></i></a>
+              <a data-toggle="tooltip" title="Hooray!"></a>
+            </a>
+          </div>
+          <div id="collapseOne" class="collapse show" data-parent="#accordion">
+            <div class="card-body m-0 p-0">
+                <div id="restaurants" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="green"></div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+              Attractions <a data-toggle="tooltip" title="Test!" span id="info" class="fas fa-info-circle"></i></a>
+              <a data-toggle="tooltip" title="Hooray!"></a>
+  
+            </a>
+          </div>
+          <div id="collapseTwo" class="collapse" data-parent="#accordion">
+            <div class="card-body m-0 p-0">
+                <div id="attractions" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="red"></div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+              Events <a data-toggle="tooltip" title="Test!" span id="info" class="fas fa-info-circle"></i>
+              <a data-toggle="tooltip" title="Hooray!"></a>  
+
+            </a>
+          </div>
+          <div id="collapseThree" class="collapse" data-parent="#accordion">
+            <div class="card-body m-0 p-0">
+                <div id="events" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="blue"></div>
+            </div>
+          </div>
+        </div>
+      
+    </div>
+      
+    <!-- <div id="restaurants" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="green"></div>
     <div id="attractions" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="red"></div></div>
-    <div id="events" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="blue"></div></div>
-
-
+    <div id="events" class="container-fluid clearfix text-center align-items-center pr-2 pl-2 mr-2 ml-2" ondrop="dropR(event, this)" ondragover="allowDrop(event)" data-append="blue"></div></div> -->
 
 </div>
     

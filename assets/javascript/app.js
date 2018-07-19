@@ -1,28 +1,27 @@
- // Initialize Firebase
-//  var config = {
-//     apiKey: "AIzaSyAqCpGYf4cTEVY92frXrlHvt4sCN4RrsVw",
-//     authDomain: "travel-app-410d0.firebaseapp.com",
-//     databaseURL: "https://travel-app-410d0.firebaseio.com",
-//     projectId: "travel-app-410d0",
-//     storageBucket: "travel-app-410d0.appspot.com",
-//     messagingSenderId: "979814528498"
-//   };
-//   firebase.initializeApp(config);
+// Initialize Firebase
+ var config = {
+    apiKey: "AIzaSyAqCpGYf4cTEVY92frXrlHvt4sCN4RrsVw",
+    authDomain: "travel-app-410d0.firebaseapp.com",
+    databaseURL: "https://travel-app-410d0.firebaseio.com",
+    projectId: "travel-app-410d0",
+    storageBucket: "travel-app-410d0.appspot.com",
+    messagingSenderId: "979814528498"
+  };
+  firebase.initializeApp(config);
 
-//   var database = firebase.database();
+  var database = firebase.database();
 
 var name;
 
-// var lat;
-// var lon;
+var lat;
+var lon;
 
 $(document).ready(function(){
     $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather').addClass('hide');
     $('#search').on('click', function(){
         event.preventDefault();
         if( $('#checkbox').is(':checked')){
-            getLocation();
-            
+            getLocation();  
         }
         else{
             alert('Please enable your location.');
@@ -52,9 +51,17 @@ function showPosition(position) {
    console.log(lat , lon);
 
     var date = new Date().toISOString().split('T')[0];
-    
-    
 
+    if($('#name').val().trim() !== ""){
+        name = $('#name').val().trim();
+    }
+    database.ref('/user').push({
+        name: name,
+        lat: lat,
+        lon: lon, 
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+    });
+    
     // $.ajax({ url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true',
     //      success: function(data){
     //          console.log(data);
@@ -85,22 +92,22 @@ function display(){
 
 
 
-$(document).on('click', '#search', function(){
-    event.preventDefault();
-    if($('#name').val().trim() !== ""){
-        name = $('#name').val().trim();
-    }
+// $(document).on('click', '#search', function(){
+//     event.preventDefault();
+//     if($('#name').val().trim() !== ""){
+//         name = $('#name').val().trim();
+//     }
 
-    // database.ref('/user').push({
-    //     name: name,
-    //     lat: lat,
-    //     lon: lon, 
-    //     dateAdded: firebase.database.ServerValue.TIMESTAMP
-    // });
+//     database.ref('/user').push({
+//         name: name,
+//         lat: lat,
+//         lon: lon, 
+//         dateAdded: firebase.database.ServerValue.TIMESTAMP
+//     });
     
-    // window.location.href = "https://avakrishn.github.io/travel-app/info.html";
+//     // window.location.href = "https://avakrishn.github.io/travel-app/info.html";
     
-});
+// });
 
 // function api(){
 //     restaurant();
@@ -227,8 +234,8 @@ function dropF(ev, el) {
         child.style.width = "100%";
 
         if(document.getElementById(data).getAttribute('data-append') == 'green'){
-            child.style.minHeight = '150px';
-            child.style.maxHeight = '150px';
+            child.style.minHeight = '160px';
+            child.style.maxHeight = '160px';
         }else{
             child.style.height = "fit-content";
             }

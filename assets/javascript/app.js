@@ -17,7 +17,8 @@ var name;
 // var lon;
 
 $(document).ready(function(){
-    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather').addClass('hide');
+    $('[data-toggle="tooltip"]').tooltip();
+    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather, #accordion').addClass('hide');
     $('#search').on('click', function(){
         event.preventDefault();
         if( $('#checkbox').is(':checked')){
@@ -79,7 +80,7 @@ function showPosition(position) {
 function display(){
     $('#hide').hide();
     $('#weather, #restaurants, #events, #attractions').empty();
-    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather').removeClass('hide');
+    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather, #accordion').removeClass('hide')
     
 }
 

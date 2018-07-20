@@ -282,7 +282,7 @@ $.ajax({
     // Create CODE HERE to Log the queryURL
     console.log(response)
     var iconURL = response.weather[0].icon;
-    var weatherIcon = $('<img>').attr('src','https://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2').css('float', 'right');;
+    var weatherIcon = $('<img>').attr('src','https://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2').css('float', 'right').css('margin-top','-10px');;
     var Ktemp = response.main.temp;
     var Ftemp = parseInt((((Ktemp-273.15)*1.8)+32));
     var temp = $('<span>').html(Ftemp + "&#8457;  ").css('float', 'right').addClass('mr-2');

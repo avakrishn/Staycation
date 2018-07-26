@@ -39,7 +39,11 @@ body{
 #userInput{
     position: absolute;
     bottom: -23%;
-    right: 38%;
+    /* right: 38%; */
+    right: 0;
+    left: 0;
+    width: fit-content;
+    margin: 0 auto;
     background-color: white;
     padding: 20px 20px 10px 20px;
     font-size: 18px;
@@ -172,6 +176,16 @@ i{
 li{
     font-size: 18px;
 }
+
+@media screen and (max-width: 980px) {
+}
+
+@media screen and (max-width: 768px)  {
+}
+
+@media screen and (max-width: 640px) {
+}
+
 /* The Modal (background)
 .modal {
     display: none; Hidden by default

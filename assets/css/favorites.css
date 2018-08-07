@@ -1,0 +1,29 @@
+#weather{
+    font-size: 18px;
+}
+
+
+#favorites{
+    height: 300px;
+    margin-bottom: 1vw;
+    padding-bottom: 0.7vw;
+}
+ 
+
+#favR, #favE, #favA{
+    display: inline-flex;
+    /* flex-direction column will diplay the flexible items vertically as one row  */
+    flex-direction: column;
+    /* any overflow vertically will be be visible when user scrolls vertically  */
+    overflow-y: scroll;
+    /* any overflow horizonatally will will be hidden */
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    width: 100%; 
+    height: 91%; 
+    border: #17a2b8 2px solid;
+}
+
+.fa-heart{
+    color: rgb(209, 42, 42);
+}

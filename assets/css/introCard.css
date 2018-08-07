@@ -1,0 +1,22 @@
+.indexIcon{
+    color: #17a2b8;
+}
+
+#title{
+    font-size: 32px;
+    line-height: 50px;
+    margin: 5vw 0 1vw 0;
+}
+.row{
+    width: fit-content;
+}
+
+.introCard{
+    width: 25vw;
+    margin: 1vw;
+
+}
+
+li{
+    font-size: 18px;
+}

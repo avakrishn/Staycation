@@ -1,27 +1,22 @@
 // Initialize Firebase
- var config = {
+var config = {
     apiKey: "AIzaSyAqCpGYf4cTEVY92frXrlHvt4sCN4RrsVw",
     authDomain: "travel-app-410d0.firebaseapp.com",
     databaseURL: "https://travel-app-410d0.firebaseio.com",
     projectId: "travel-app-410d0",
     storageBucket: "travel-app-410d0.appspot.com",
     messagingSenderId: "979814528498"
-  };
-  firebase.initializeApp(config);
+};
+firebase.initializeApp(config);
+var database = firebase.database();
 
-  var database = firebase.database();
-
-var name;
-
-var lat;
-var lon;
-
+// function is executed when entire page loads
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
-    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather, #accordion').addClass('hide');
+    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather, #accordion').hide();
     $('#search').on('click', function(){
         event.preventDefault();
-        if( $('#checkbox').is(':checked')){
+        if( $('#userInput input[type= "checkbox"]').is(':checked')){
             getLocation();  
         }
         else{
@@ -29,15 +24,9 @@ $(document).ready(function(){
         }
 
     })
-    // $('#checkbox').change(function(){
-    //     event.preventDefault();
-    //     if( $('#checkbox').is(':checked')){
-    //         getLocation();
-    //     }
-    // });
-
 });
 
+// current geolocation of user is determined
 function getLocation() {
     event.preventDefault();
     if (navigator.geolocation) {
@@ -46,74 +35,43 @@ function getLocation() {
         alert("Geolocation is not supported by this browser.");
     }  
 }
+// current latitude and longitude of user is determined
 function showPosition(position) {
-   lat = position.coords.latitude;
-   lon = position.coords.longitude;
+   var lat = position.coords.latitude;
+   var lon = position.coords.longitude;
    console.log(lat , lon);
 
-    var date = new Date().toISOString().split('T')[0];
+    // get current date and time (UTC) of user
+    var date = new Date().toUTCString();
 
-    if($('#name').val().trim() !== ""){
-        name = $('#name').val().trim();
-    }
+    // user's name
+    var name = $('#userInput input[type= "text"]').val().trim();
+ 
+    // store user's name, latitude, longitude, and current date and time in firebase
     database.ref('/user').push({
         name: name,
         lat: lat,
         lon: lon, 
+        date: date,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
     
-    // $.ajax({ url:'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lon+'&sensor=true',
-    //      success: function(data){
-    //          console.log(data);
-    //          var fullAddress = data.results[0].formatted_address;
-    //          var cityState = data.results[2].formatted_address;
-    //          var city = data.results[0].address_components[3].long_name;
-    //         // yelpEvents(cityState, date);
-    //      }
-    // });
-    // console.log(city);
-//    setTimeout(function(){
-        weather(lat, lon);
-        restaurant(lat, lon);
-        // getFoursquare(lat, lon); 
-        yelpLocations(lat, lon);
-        yelpEvents(lat, lon, date);
-        display();
-       
-    // }, 6000);
+    // call functions which display necessary information based on user's latitude and longitude
+    weather(lat, lon);
+    restaurant(lat, lon);
+    yelpAttractions(lat, lon);
+    yelpEvents(lat, lon, date);
+
+    display();
 }
 
+// hides the intro cards and displays the accordion and favorites sections which contain information about the weather and nearby restaurants, events, and attractions
 function display(){
-    $('#hide').hide();
+    $('.hide').hide();
     $('#weather, #restaurants, #events, #attractions').empty();
-    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather, #accordion').removeClass('hide')
+    $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather, #accordion').show();
     
 }
-
-
-
-// $(document).on('click', '#search', function(){
-//     event.preventDefault();
-//     if($('#name').val().trim() !== ""){
-//         name = $('#name').val().trim();
-//     }
-
-//     database.ref('/user').push({
-//         name: name,
-//         lat: lat,
-//         lon: lon, 
-//         dateAdded: firebase.database.ServerValue.TIMESTAMP
-//     });
-    
-//     // window.location.href = "https://avakrishn.github.io/travel-app/info.html";
-    
-// });
-
-// function api(){
-//     restaurant();
-//     events();
-// }
 
 function restaurant(x,y) {
     $.ajax({  
@@ -129,7 +87,6 @@ function restaurant(x,y) {
         success: function(response) { 
             console.log(response)
             for(var i=0; i < 15; i++){
-                // var dragIcon = <i class="fas fa-ellipsis-v"></i>
                 var rCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 rCard align-middle myTrigger').attr({
                     href: response.restaurants[i].restaurant.url,
                     draggable: "true",
@@ -188,7 +145,6 @@ function restaurant(x,y) {
 }
 
 
-
 function allowDrop(ev) {
     ev.preventDefault();
 
@@ -198,23 +154,14 @@ function drag(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
-// function drop(ev) {
-//     ev.preventDefault();
-//     var data = ev.dataTransfer.getData("text");
-//     ev.target.appendChild(document.getElementById(data));
-// }
 
 function dropR(ev, el){
     
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
     
-    // console.log(child.childNodes[5]);
     if(ev.target.getAttribute('data-append') == document.getElementById(data).getAttribute('data-append')){
         var child = document.getElementById(data);
-        // child.childNodes[2].style.display = "inline-flex";
-        // child.childNodes[5].style.display = "block";
-        // child.childNodes[2].classList.add("w3-circle");
         child.childNodes[2].style.borderRadius = "";
         child.childNodes[2].style.width = "auto";
         child.childNodes[2].style.height = "100px";
@@ -244,8 +191,6 @@ function dropF(ev, el) {
 
     if(ev.target.getAttribute('data-append') == document.getElementById(data).getAttribute('data-append')){
         var child = document.getElementById(data);
-        // child.childNodes[2].style.display = "none";
-        // child.childNodes[5].style.display = "none";
         child.childNodes[2].style.borderRadius = "50%";
         child.childNodes[2].style.width = "16%";
         child.childNodes[2].style.height = "auto";
@@ -261,25 +206,21 @@ function dropF(ev, el) {
         }else{
             child.style.height = "fit-content";
             }
-        // console.log(child.childNodes[2]);
-        // console.log(child.childNodes[5]);
         el.appendChild(child);
     }
 
   }
 
-var APIKey = "3cde5a9db34a7bc318d935fbac26a604";
-// var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&"+"lon="+lon+"&APPID="+APIKey;
+
 
 function weather(x,y){
+var APIKey = "3cde5a9db34a7bc318d935fbac26a604";
 var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat="+x+"&"+"lon="+y+"&APPID="+APIKey;
 console.log(queryURL);
 $.ajax({
     url: queryURL,
     method: "GET"
   }).then(function(response) {
-
-    // Create CODE HERE to Log the queryURL
     console.log(response)
     var iconURL = response.weather[0].icon;
     var weatherIcon = $('<img>').attr('src','https://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2').css('float', 'right').css('margin-top','-10px');;
@@ -296,14 +237,12 @@ $.ajax({
 
 
 
-  function yelpLocations(x,y){
-    // var rapid = new RapidAPI("default-application_5b4a33cae4b004833ec270ad", "3ad9125a-b897-4679-9417-020f62576786");
-    // var RapidAPI = new require('rapidapi-connect');
+  function yelpAttractions(x,y){
     var rapid = new RapidAPI('default-application_5b4a33cae4b004833ec270ad', '3ad9125a-b897-4679-9417-020f62576786');
 
     rapid.call('YelpAPI', 'getBusinesses', { 
         'term': 'attractions',
-        'openNow': 'true',
+        // 'openNow': 'true',
         'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
         'latitude': x,
         'longitude': y,
@@ -313,9 +252,7 @@ $.ajax({
     }).on('success', function(response){
         console.log(response);
         for(var i=0; i < 15; i++){
-            // var dragIcon = <i class="fas fa-ellipsis-v"></i>
-            var yCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 yCard align-middle myTrigger').attr({
-                // href: response.restaurants[i].restaurant.url,
+            var aCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 aCard align-middle myTrigger').attr({
                 draggable: "true",
                 ondragstart: "drag(event)",
                 ondrop:"return false",
@@ -328,14 +265,13 @@ $.ajax({
                 position: 'relative'
             });
             var icon = $('<span>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 icon"></i>').css('color', 'grey');
-            var yName = $('<h5>').html(response.businesses[i].name);
-                var yImage = $('<img>').attr({
-                    src: response.businesses[i].image_url,
-                    // href:  response.restaurants[i].restaurant.url,
-                    target: '_blank',
-                    height: '100px',
-                    id: 'image'+i
-                });
+            var aName = $('<h5>').html(response.businesses[i].name);
+            var aImage = $('<img>').attr({
+                src: response.businesses[i].image_url,
+                target: '_blank',
+                height: '100px',
+                id: 'image'+i
+            });
             
             var categories = $('<p>').html(response.businesses[i].categories[0].title).css("margin-bottom", '0.5rem');
             var location = "";
@@ -343,16 +279,15 @@ $.ajax({
             for (var j=0; j<displayAddress.length; j++){
                 location += displayAddress[j] + " ";
             }
-            // var location = response.businesses[i].location.display_address[0] + " " + response.businesses[i].location.display_address[1];
-            var yAddress = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
-            var option = response.businesses[i].is_closed.toString();
-            var yAppend = '';
-            if (option == 'false'){
-                yAppend = $('<p>').html('Open Now').css('color', 'green');
+            var aAddress = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
+            var isClosed = response.businesses[i].is_closed.toString();
+            var openClosed = '';
+            if (isClosed == 'false'){
+                openClosed = $('<p>').html('Open Now').css('color', 'green');
             } else {
-                yAppend = $('<p>').html('Closed Now').css('color', 'red');
+                openClosed = $('<p>').html('Closed Now').css('color', 'red');
             }
-            var yelpBusiness = $('<a>').html("Yelp Page").attr({
+            var aYelp = $('<a>').html("Yelp Page").attr({
                 href: response.businesses[i].url,
                 target: '_blank',
             }).css({
@@ -363,14 +298,12 @@ $.ajax({
                 left: '0',
                 'margin-bottom': '0.5rem'
             });
-            yCard.append(icon, yName, yImage, categories, yAddress, yelpBusiness, yAppend);
-            $('#attractions').append(yCard);
+            aCard.append(icon, aName, aImage, categories, aAddress, aYelp, openClosed);
+            $('#attractions').append(aCard);
         } 
         
     }
-        /*YOUR CODE GOES HERE*/ 
     ).on('error', function(res){
-        /*YOUR CODE GOES HERE*/ 
         console.log('Error');
     });
 
@@ -383,23 +316,17 @@ $.ajax({
 
     rapid.call('YelpAPI', 'searchEvent', { 
         'coordinates': coordinate,
-        // 'latitude': x,
-        // 'longitude': y,
-        // 'location': x,
         'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
         'limit': '20',
-        // 'sortOn': 'time_start',
+        'sortOn': 'time_start',
         'radius': '10000',
         'startDate': z,
-        'endDate': z,
-        // 'categories': ['', '']
+        'endDate': z
 
     }).on('success', function (response) {
         console.log(response);
         for(var i=0; i < 15; i++){
-            // var dragIcon = <i class="fas fa-ellipsis-v"></i>
             var eCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 eCard align-middle myTrigger').attr({
-                // href: response.restaurants[i].restaurant.url,
                 draggable: "true",
                 ondragstart: "drag(event)",
                 ondrop:"return false",
@@ -415,7 +342,6 @@ $.ajax({
             var eName = $('<h5>').html(response.events[i].name);
             var eImage = $('<img>').attr({
                 src: response.events[i].image_url,
-                // href:  response.restaurants[i].restaurant.url,
                 target: '_blank',
                 height: '100px',
                 id: 'image'+i
@@ -423,14 +349,12 @@ $.ajax({
             var categoryReplace = response.events[i].category;
             categoryReplace = categoryReplace.replace(/-/g, ' ') 
             var category = $('<p>').html(categoryReplace).css("margin-bottom", '0.5rem').css("text-transform", "capitalize");
-            // var location = response.events[i].location.display_address[0] + " " + response.events[i].location.display_address[1];
             var location = "";
             var displayAddress = response.events[i].location.display_address;
             for (var j=0; j<displayAddress.length; j++){
                 location = location + " " + displayAddress[j];
             }
             var eAddress = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
-            // var cost = $('<p>').html('$ ' + response.events[i].cost);
                 if (response.events[i].cost == null){
                     eAppend = $('<p>').html('Free').css('color', 'green');
                 } else {
@@ -452,13 +376,6 @@ $.ajax({
             else{
                 var endStr = "";
             }
-            // var option = response.businesses[i].is_closed.toString();
-            // var eAppend = '';
-            // if (option == 'false'){
-            //     eAppend = $('<p>').html('Open Now').css('color', 'green');
-            // } else {
-            //     eAppend = $('<p>').html('Closed Now').css('color', 'red');
-            // }
             var eEvent = $('<a>').html("Yelp Event Page").attr({
                 href: response.events[i].event_site_url,
                 target: '_blank',
@@ -473,10 +390,8 @@ $.ajax({
             eCard.append(icon, eName, eImage, category, eAddress, eAppend, startStr, endStr, eEvent);
             $('#events').append(eCard);
         } 
-        /*YOUR CODE GOES HERE*/ 
     }).on('error', function (res) {
         console.log('Error');
-        /*YOUR CODE GOES HERE*/ 
 });
   }
  

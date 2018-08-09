@@ -52,6 +52,7 @@ function showPosition(position) {
     yelpAttractions(lat, lon);
     yelpEvents(lat, lon, date);
 
+    // the intro cards will be hidden and the favorites section as well as the the accordion with the restaurant, attraction, and event cards will be shown
     display();
 }
 
@@ -60,7 +61,6 @@ function display(){
     $('.hide').hide();
     $('#weather, #restaurants, #events, #attractions').empty();
     $('#favorites, #favR, #favE, #favA, #restaurants, #events, #attractions, #weather, #accordion').show();
-    
 }
 
 // when executed this function, using information from openweathermap api will display the current city of the user along with the current temperature and weather icon and description for the current city
@@ -71,7 +71,7 @@ function weather(x,y){
     $.ajax({
         url: queryURL,
         method: "GET"
-      }).then(function(response) {
+    }).then(function(response) {
         console.log(response)
         var iconURL = response.weather[0].icon;
         var weatherIcon = $('<img>').attr('src','https://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2');
@@ -87,7 +87,7 @@ function weather(x,y){
 }
 
 // when executed this function, using information from zomato api, will create individual cards for each restaurant including the restaurant name, image, type of cuisine, address (opens to maps when clicked on), and link to restaurant page
-function restaurant(x,y) {
+function restaurant(x,y){
     $.ajax({  
         url: "https://developers.zomato.com/api/v2.1/search",
         dataType: 'json',
@@ -98,7 +98,7 @@ function restaurant(x,y) {
         async: true,
         beforeSend: function(xhr){xhr.setRequestHeader('user-key', 
         'faafc11160a617b55a560feef06b483c');},  // This inserts the api key into the HTTP header
-        success: function(response) { 
+        success: function(response){ 
             console.log(response)
             for(var i=0; i < 15; i++){
                 var rCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 rCard align-middle myTrigger').attr({
@@ -138,68 +138,69 @@ function restaurant(x,y) {
                 rCard.append(icon, rName, rImage, rCuisine, rLocation, rMenu);
                 $('#restaurants').append(rCard);
             } 
-        } });
+        }
+    });
 }
 
 
 // when executed this function, using information from yelp api, will create individual cards for each attraction including the attraction name, image, category type, address (opens to maps when clicked on), and link to the yelp page
 function yelpAttractions(x,y){
-var rapid = new RapidAPI('default-application_5b4a33cae4b004833ec270ad', '3ad9125a-b897-4679-9417-020f62576786');
+    // using rapid API as a wrapper for Yelp Api
+    var rapid = new RapidAPI('default-application_5b4a33cae4b004833ec270ad', '3ad9125a-b897-4679-9417-020f62576786');
 
-rapid.call('YelpAPI', 'getBusinesses', { 
-    'term': 'attractions',
-    // 'openNow': 'true',
-    'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
-    'latitude': x,
-    'longitude': y,
-    'attributes': ['', '']
+    rapid.call('YelpAPI', 'getBusinesses', { 
+        'term': 'attractions',
+        // 'openNow': 'true',
+        'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
+        'latitude': x,
+        'longitude': y,
+        'attributes': ['', '']
 
-
-}).on('success', function(response){
-    console.log(response);
-    for(var i=0; i < 15; i++){
-        var aCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 aCard align-middle myTrigger').attr({
-            draggable: "true",
-            ondragstart: "drag(event)",
-            ondrop:"return false",
-            ondragover:"return false",
-            "data-append": "red",
-            id: "dragA"+i
-        });
-        var icon = $('<span>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 dragIcon"></i>');
-        var aName = $('<h5>').html(response.businesses[i].name);
-        if(response['businesses'][i]['name'].length > 25){
-            aName.addClass('smallerTitle');
-        }
-        var aImage = $('<img>').attr({src: response.businesses[i].image_url}).addClass('imgHeight');
-        var categoryName = response.businesses[i].categories[0].title;
-        if((categoryName == "Venues & Event Spaces" || categoryName == "Travel Agents") && response.businesses[i].categories[1].title !== undefined){
-            categoryName = response.businesses[i].categories[1].title;
-        }
-        var categories = $('<p>').html(categoryName).addClass('categoryMB');
-        var location = "";
-        var displayAddress = response.businesses[i].location.display_address;
-        for (var j=0; j<displayAddress.length; j++){
-            location += displayAddress[j] + " ";
-        }
-        var aAddress = $('<a>').attr({
-            href: "http://maps.google.com/?q="+location,
-            target: '_blank',
-        }).html(location).addClass('categoryMB');
-        var isClosed = response.businesses[i].is_closed.toString();
-        var openClosed = '';
-        if (isClosed == 'false'){
-            var openClosed = $('<p>').html('Open Now').addClass('colorGreen');
-        } else {
-            var openClosed = $('<p>').html('Closed Now').addClass('colorRed');
-        }
-        var aYelp = $('<a>').html("Yelp Page").attr({
-            href: response.businesses[i].url,
-            target: '_blank',
-        }).addClass('pageLink');
-        aCard.append(icon, aName, aImage, categories, aAddress, aYelp, openClosed);
-        $('#attractions').append(aCard);
-    } 
+    }).on('success', function(response){
+        console.log(response);
+        for(var i=0; i < 15; i++){
+            var aCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 aCard align-middle myTrigger').attr({
+                draggable: "true",
+                ondragstart: "drag(event)",
+                ondrop:"return false",
+                ondragover:"return false",
+                "data-append": "red",
+                id: "dragA"+i
+            });
+            var icon = $('<span>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 dragIcon"></i>');
+            var aName = $('<h5>').html(response.businesses[i].name);
+            if(response['businesses'][i]['name'].length > 25){
+                aName.addClass('smallerTitle');
+            }
+            var aImage = $('<img>').attr({src: response.businesses[i].image_url}).addClass('imgHeight');
+            var categoryName = response.businesses[i].categories[0].title;
+            if((categoryName == "Venues & Event Spaces" || categoryName == "Travel Agents") && response.businesses[i].categories[1].title !== undefined){
+                categoryName = response.businesses[i].categories[1].title;
+            }
+            var categories = $('<p>').html(categoryName).addClass('categoryMB');
+            var location = "";
+            var displayAddress = response.businesses[i].location.display_address;
+            for (var j=0; j<displayAddress.length; j++){
+                location += displayAddress[j] + " ";
+            }
+            var aAddress = $('<a>').attr({
+                href: "http://maps.google.com/?q="+location,
+                target: '_blank',
+            }).html(location).addClass('categoryMB');
+            var isClosed = response.businesses[i].is_closed.toString();
+            var openClosed = '';
+            if (isClosed == 'false'){
+                var openClosed = $('<p>').html('Open Now').addClass('colorGreen');
+            } else {
+                var openClosed = $('<p>').html('Closed Now').addClass('colorRed');
+            }
+            var aYelp = $('<a>').html("Yelp Page").attr({
+                href: response.businesses[i].url,
+                target: '_blank',
+            }).addClass('pageLink');
+            aCard.append(icon, aName, aImage, categories, aAddress, aYelp, openClosed);
+            $('#attractions').append(aCard);
+        } 
     }).on('error', function(res){
     console.log('Error');
     });
@@ -207,77 +208,78 @@ rapid.call('YelpAPI', 'getBusinesses', {
 
 // when executed this function, using information from yelp api, will create individual cards for each event including the event name, image, category type, address (opens to maps when clicked on), cost, date and time, and link to the yelp page
 function yelpEvents(x,y,z){
-var rapid = new RapidAPI("default-application_5b4a341ce4b0fd573002f094", "deaaa550-92ad-4d67-8742-180e2230c626");
+    // using rapid API as a wrapper for Yelp Api
+    var rapid = new RapidAPI("default-application_5b4a341ce4b0fd573002f094", "deaaa550-92ad-4d67-8742-180e2230c626");
 
-var coordinate = x + ", " + y;
+    var coordinate = x + ", " + y;
 
-rapid.call('YelpAPI', 'searchEvent', { 
-    'coordinates': coordinate,
-    'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
-    'limit': '20',
-    'sortOn': 'time_start',
-    'radius': '10000',
-    'startDate': z,
-    'endDate': z
+    rapid.call('YelpAPI', 'searchEvent', { 
+        'coordinates': coordinate,
+        'accessToken': '3h3aitdeSr9OUymm7UYBzQbS1AqxncwCG_Ieoxc_iL1lAXM9w-sGH53FIWZn0LO_z-IVNFX3NZ6JDTZ01NKd5pcvmsgbT2S1_U3d95ARe4DBsBz6zgREijpNSDdKW3Yx',
+        'limit': '20',
+        'sortOn': 'time_start',
+        'radius': '10000',
+        'startDate': z,
+        'endDate': z
 
-}).on('success', function (response) {
-    console.log(response);
-    for(var i=0; i < 15; i++){
-        var eCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 eCard align-middle myTrigger').attr({
-            draggable: "true",
-            ondragstart: "drag(event)",
-            ondrop:"return false",
-            ondragover:"return false",
-            "data-append": "blue",
-            id: "dragE"+i
-        });
-        var icon = $('<span>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 dragIcon"></i>');
-        var eName = $('<h5>').html(response.events[i].name);
-        if(response['events'][i]['name'].length > 25){
-            eName.addClass('smallerTitle');
-        }
-        var eImage = $('<img>').attr({src: response.events[i].image_url}).addClass('imgHeight');
-        var categoryReplace = response.events[i].category;
-        categoryReplace = categoryReplace.replace(/-/g, ' '); 
-        var category = $('<p>').html(categoryReplace).addClass('categoryMB capitalize');
-        var location = "";
-        var displayAddress = response.events[i].location.display_address;
-        for (var j=0; j<displayAddress.length; j++){
-            location = location + " " + displayAddress[j];
-        }
-        var eAddress = $('<a>').attr({
-            href: "http://maps.google.com/?q="+location,
-            target: '_blank',
-        }).html(location).addClass('categoryMB');
+    }).on('success', function (response) {
+        console.log(response);
+        for(var i=0; i < 15; i++){
+            var eCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 eCard align-middle myTrigger').attr({
+                draggable: "true",
+                ondragstart: "drag(event)",
+                ondrop:"return false",
+                ondragover:"return false",
+                "data-append": "blue",
+                id: "dragE"+i
+            });
+            var icon = $('<span>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 dragIcon"></i>');
+            var eName = $('<h5>').html(response.events[i].name);
+            if(response['events'][i]['name'].length > 25){
+                eName.addClass('smallerTitle');
+            }
+            var eImage = $('<img>').attr({src: response.events[i].image_url}).addClass('imgHeight');
+            var categoryReplace = response.events[i].category;
+            categoryReplace = categoryReplace.replace(/-/g, ' '); 
+            var category = $('<p>').html(categoryReplace).addClass('categoryMB capitalize');
+            var location = "";
+            var displayAddress = response.events[i].location.display_address;
+            for (var j=0; j<displayAddress.length; j++){
+                location = location + " " + displayAddress[j];
+            }
+            var eAddress = $('<a>').attr({
+                href: "http://maps.google.com/?q="+location,
+                target: '_blank',
+            }).html(location).addClass('categoryMB');
 
-        if (response.events[i].cost == null){
-            var cost = $('<p>').html('Free').addClass('colorGreen');
-        } else {
-            var cost = $('<p>').html('$' + response.events[i].cost).addClass('colorRed');
-        }
-        if(response.events[i].time_start != null){
-            var startSlice = response.events[i].time_start;
-            var start = startSlice.slice(5);
-            var startStr = $('<p>').html('Time Start: ' + start);
-        }
-        else{
-            var startStr = "";  
-        }
-        if(response.events[i].time_end != null ){
-            var endSlice = response.events[i].time_end;
-            var end = endSlice.slice(5);
-            var endStr = $('<p>').html('Time End: ' + end);
-        }
-        else{
-            var endStr = "";
-        }
-        var eEvent = $('<a>').html("Yelp Event Page").attr({
-            href: response.events[i].event_site_url,
-            target: '_blank',
-        }).addClass('pageLink');
-        eCard.append(icon, eName, eImage, category, eAddress, cost, startStr, endStr, eEvent);
-        $('#events').append(eCard);
-    } 
+            if (response.events[i].cost == null){
+                var cost = $('<p>').html('Free').addClass('colorGreen');
+            } else {
+                var cost = $('<p>').html('$' + response.events[i].cost).addClass('colorRed');
+            }
+            if(response.events[i].time_start != null){
+                var startSlice = response.events[i].time_start;
+                var start = startSlice.slice(5);
+                var startStr = $('<p>').html('Time Start: ' + start);
+            }
+            else{
+                var startStr = "";  
+            }
+            if(response.events[i].time_end != null ){
+                var endSlice = response.events[i].time_end;
+                var end = endSlice.slice(5);
+                var endStr = $('<p>').html('Time End: ' + end);
+            }
+            else{
+                var endStr = "";
+            }
+            var eEvent = $('<a>').html("Yelp Event Page").attr({
+                href: response.events[i].event_site_url,
+                target: '_blank',
+            }).addClass('pageLink');
+            eCard.append(icon, eName, eImage, category, eAddress, cost, startStr, endStr, eEvent);
+            $('#events').append(eCard);
+        } 
     }).on('error', function (res) {
         console.log('Error');
     });

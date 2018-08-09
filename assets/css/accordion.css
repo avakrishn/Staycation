@@ -23,10 +23,18 @@
     -webkit-overflow-scrolling: touch;
 }
 
-.rCard{
+.rCard, .aCard, .eCard{
     min-width: 250px;
-    height: 330px;
     position: relative;
+}
+
+.rCard, .aCard{
+    height: 330px;
+}
+
+.eCard{
+    height: 390px;
+
 }
 
 .card-link{
@@ -53,12 +61,12 @@ a:not([href]):not([tabindex]) {
     color: #17a2b8;
 }
 
-.icon:hover{
+.dragIcon:hover{
     cursor: -webkit-grabbing; 
     cursor: grabbing;
 }
 
-.icon{
+.dragIcon{
     color: grey;
 }
 
@@ -78,6 +86,10 @@ a:not([href]):not([tabindex]) {
     margin-bottom: 0.5rem;
 }
 
+.capitalize{
+    text-transform: capitalize;
+}
+
 .pageLink{
     color: orange;
     position: absolute;
@@ -86,6 +98,14 @@ a:not([href]):not([tabindex]) {
     left: 0;
     margin-bottom:0.5rem;
     margin-top:0.5rem;
+}
+
+.colorGreen{
+    color: green;
+}
+
+.colorRed{
+    color: red;
 }
 
 

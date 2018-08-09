@@ -64,6 +64,29 @@ function display(){
     
 }
 
+// when executed this function, using information from openweathermap api will display the current city of the user along with the current temperature and weather icon and description for the current city
+function weather(x,y){
+    var APIKey = "3cde5a9db34a7bc318d935fbac26a604";
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat="+x+"&"+"lon="+y+"&APPID="+APIKey;
+    console.log(queryURL);
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+      }).then(function(response) {
+        console.log(response)
+        var iconURL = response.weather[0].icon;
+        var weatherIcon = $('<img>').attr('src','https://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2');
+        var Ktemp = response.main.temp;
+        var Ftemp = parseInt((((Ktemp-273.15)*1.8)+32));
+        var temp = $('<span>').html(Ftemp + "&#8457;  ").css('float', 'right').addClass('mr-2');
+        var description = $('<span>').html(response.weather[0].description).addClass('wDescription');
+        var cityDisplay = $('<div>').html("City: "+ response.name).addClass("cityDisplay");
+        var weatherDiv = $('<div>').append(description, temp, weatherIcon);
+        $('#weather').append(weatherDiv, cityDisplay );
+    
+    });
+}
+
 // when executed this function, using information from zomato api, will create individual cards for each restaurant including the restaurant name, image, type of cuisine, address (opens to maps when clicked on), and link to restaurant page
 function restaurant(x,y) {
     $.ajax({  
@@ -80,83 +103,40 @@ function restaurant(x,y) {
             console.log(response)
             for(var i=0; i < 15; i++){
                 var rCard = $('<div>').addClass('w3-panel w3-card-4 text-center p-3 mr-4 rCard align-middle myTrigger').attr({
-                    href: response.restaurants[i].restaurant.url,
                     draggable: "true",
                     ondragstart: "drag(event)",
                     ondrop:"return false",
                     ondragover:"return false",
                     "data-append": "green",
                     id: "dragR"+i
-                }).css({
-                    "min-width": '250px',
-                    height:'330px',
-                    position: 'relative'
                 });
-                var icon = $('<p>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 icon"></i>').css('color', 'grey');
+                var icon = $('<p>').html('<i class="fas fa-ellipsis-v fa-lg float-left mr-2 icon"></i>');
                 var rName = $('<h5>').html(response.restaurants[i].restaurant.name);
+                if(response["restaurants"][i]["restaurant"]["name"].length > 25){
+                    rName.addClass('smallerTitle');
+                }
                 if(response.restaurants[i].restaurant.featured_image !== ""){
-                    var rImage = $('<img>').attr({
-                        src: response.restaurants[i].restaurant.featured_image,
-                        href:  response.restaurants[i].restaurant.url,
-                        target: '_blank',
-                        height: '100px',
-                        id: 'image'+i
-                    });
+                    var rImage = $('<img>').attr({src: response.restaurants[i].restaurant.featured_image});
                 }
                 else{
-                    var rImage = $('<img>').css('height', '100px').attr({
-                        src: 'assets/images/image-filler.jpg',
-                        href: response.restaurants[i].restaurant.url,
-                        target:'_blank',
-                        id: 'image' +i
-                    });
-                    
+                    var rImage = $('<img>').attr({src: 'assets/images/image-filler.jpg'});
                 }
+                rImage.addClass('imgHeight');
                 
-                var rCuisine = $('<p>').html(response.restaurants[i].restaurant.cuisines).css("margin-bottom", '0.5rem');
+                var rCuisine = $('<p>').html(response.restaurants[i].restaurant.cuisines).addClass('categoryMB');
                 var location = response.restaurants[i].restaurant.location.address;
-                var rLocation = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location + '</br>');
+                var rLocation = $('<a>').attr('href', "http://maps.google.com/?q="+location).attr('target','_blank').html(location).addClass('categoryMB');
                 var rMenu = $('<a>').html(response.restaurants[i].restaurant.name + " Menu").attr({
                     href: response.restaurants[i].restaurant.menu_url,
                     target: '_blank',
-                }).css({
-                    color: 'orange',
-                    position: 'absolute',
-                    bottom: '0',
-                    right: '0',
-                    left: '0',
-                    'margin-bottom': '0.5rem',
-                    'margin-top': '0.5rem'
-                });
+                }).addClass('pageLink');
+                if(response["restaurants"][i]["restaurant"]["name"].length > 50){
+                    rMenu.html("Restaurant Menu");
+                }
                 rCard.append(icon, rName, rImage, rCuisine, rLocation, rMenu);
                 $('#restaurants').append(rCard);
             } 
-            
         } });
-
-}
-
-// when executed this function, using information from openweathermap api will display the current city of the user along with the current temperature and weather icon and description for the current city
-function weather(x,y){
-var APIKey = "3cde5a9db34a7bc318d935fbac26a604";
-var queryURL = "https://api.openweathermap.org/data/2.5/weather?lat="+x+"&"+"lon="+y+"&APPID="+APIKey;
-console.log(queryURL);
-$.ajax({
-    url: queryURL,
-    method: "GET"
-  }).then(function(response) {
-    console.log(response)
-    var iconURL = response.weather[0].icon;
-    var weatherIcon = $('<img>').attr('src','https://openweathermap.org/img/w/'+iconURL+'.png').addClass('weatherIcon mr-2').css('float', 'right').css('margin-top','-10px');;
-    var Ktemp = response.main.temp;
-    var Ftemp = parseInt((((Ktemp-273.15)*1.8)+32));
-    var temp = $('<span>').html(Ftemp + "&#8457;  ").css('float', 'right').addClass('mr-2');
-    var description = $('<span>').html(response.weather[0].description).css('float', 'right');;
-    cityDisplay = $('<div>').html("City: "+ response.name).css('display', 'inline-block');
-    var weatherDiv = $('<div>').append(description, temp, weatherIcon);
-    $('#weather').append(weatherDiv, cityDisplay );
-
-  });
 }
 
 

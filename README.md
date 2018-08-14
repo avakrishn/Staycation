@@ -6,7 +6,7 @@
 An interactive app that allows users to plan a "staycation" (vacation in one’s current city) by using their current location to deliver information on restaurants, top-attractions, and events near them. Enhanced UX by allowing users to drag and drop the restaurant, top-attraction, and event cards into their favorites.
 
 ### **Technologies used to build the app:**
-* Javascript, jQuery,  HTML5, CSS3, Bootstrap, Firebase, APIs, AJAX
+* Javascript, jQuery,  HTML5, CSS3, Bootstrap4, Firebase, APIs, AJAX
 
 ### **APIs used:**
 * Weather API (https://openweathermap.org/api)

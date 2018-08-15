@@ -9,7 +9,7 @@ function drag(ev) {
 }
 
 // drop into Accordion
-function dropR(ev, el){
+function dropIntoAccordion (ev, el){
     
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
@@ -40,7 +40,7 @@ function dropR(ev, el){
   }
 
 // drop into favorites section
-function dropF(ev, el) {
+function dropIntoFavorites (ev, el) {
     ev.preventDefault();
     var data = ev.dataTransfer.getData("text");
 
